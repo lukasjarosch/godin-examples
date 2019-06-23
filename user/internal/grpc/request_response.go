@@ -71,7 +71,7 @@ func EncodeGetRequest(ctx context.Context, request interface{}) (pbRequest inter
 	req := request.(endpoint.GetRequest)
 	pbRequest, err = GetRequestEncoder(req)
 	if err != nil {
-		return nil, err
+		return nil, EncodeError(err)
 	}
 	return pbRequest, nil
 }

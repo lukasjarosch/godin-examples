@@ -26,7 +26,7 @@ FROM scratch
 
 #  service binary and assets
 COPY --from=builder /bin/user /user
-COPY ./migrations /migrations
+#COPY ./migrations /migrations
 
 # import from builder
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo

@@ -1,10 +1,13 @@
 {
+  "docker": {
+    "registry": "docker.coozzy.ch"
+  },
   "godin": {
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "project": {
     "created": "Sun, 23 Jun 2019 10:15:02 CEST",
-    "updated": "Sun, 23 Jun 2019 12:26:16 CEST"
+    "updated": "Sun, 23 Jun 2019 20:58:28 CEST"
   },
   "protobuf": {
     "package": "github.com/lukasjarosch/godin-examples/user/api",

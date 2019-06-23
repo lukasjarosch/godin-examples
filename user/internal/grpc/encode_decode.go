@@ -14,10 +14,11 @@ import (
 // EncodeError encodes domain-level errors into gRPC transport-level errors
 func EncodeError(err error) error {
 	switch err {
+	case service.ErrNotImplemented:
+		return status.Error(codes.Unimplemented, err.Error())
 	default:
 		return status.Error(codes.Unknown, err.Error())
 	}
-	return err
 }
 
 // ----------------[ MAPPING FUNCS ]----------------
