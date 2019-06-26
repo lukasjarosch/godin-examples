@@ -3,11 +3,11 @@
     "registry": "docker.coozzy.ch"
   },
   "godin": {
-    "version": "0.4.0"
+    "version": "v0.4.0"
   },
   "project": {
     "created": "Sun, 23 Jun 2019 10:15:02 CEST",
-    "updated": "Sun, 23 Jun 2019 20:58:28 CEST"
+    "updated": "Tue, 25 Jun 2019 19:57:31 CEST"
   },
   "protobuf": {
     "package": "github.com/lukasjarosch/godin-examples/user/api",
@@ -51,6 +51,17 @@
     "namespace": "godin"
   },
   "transport": {
+    "amqp": {
+      "default_address": "amqp://username:password@host:port/vhost",
+      "subscriber": {
+        "user_created_subscriber": {
+          "topic": "user.created",
+          "exchange": "user-exchange",
+          "exchange_type": "durable",
+          "queue": "user-created-queue"
+        }
+      }
+    },
     "grpc": {
       "enabled": true
     }
