@@ -3,6 +3,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/subscriber"
+	"github.com/lukasjarosch/godin/pkg/amqp"
 	"net"
 	"net/http"
 	"os"
@@ -24,6 +26,7 @@ import (
 	"github.com/lukasjarosch/godin/pkg/log"
 )
 
+var AmqpAddr = getEnv("AMQP_ADDRESS", "the-default-value")
 var DebugAddr = getEnv("DEBUG_ADDRESS", "0.0.0.0:3000")
 var GrpcAddr = getEnv("GRPC_ADDRESS", "0.0.0.0:50051")
 
@@ -32,6 +35,22 @@ var g group.Group
 
 func main() {
 	logger := log.New()
+
+	// init AMQP
+	rabbitMQ := amqp.NewRabbitMQ(AmqpAddr)
+	if err := rabbitMQ.Connect(); err != nil {
+		logger.Error("failed to connect to RabbitMQ", "err", err)
+		os.Exit(1)
+	}
+	if err := rabbitMQ.NewChannel(); err != nil {
+		logger.Error("failed to create AMQP channel", "err", err)
+		os.Exit(1)
+	}
+	if err := rabbitMQ.DeclareExchange("exchange-name", "topic", false, false, false, false); err != nil {
+		logger.Error("failed to create AMQP channel", "err", err)
+		os.Exit(1)
+	}
+	defer rabbitMQ.Connection.Close()
 
 	// initialize service layer
 	var svc service.User
@@ -45,6 +64,12 @@ func main() {
 		endpoints   = endpoint.Endpoints(svc, logger)
 		grpcHandler = svcGrpc.NewServer(endpoints, logger)
 	)
+
+	userCreatedSubscriber, err := subscriber.InitUserCreatedSubscriber(rabbitMQ.Channel, svc, logger)
+	if err != nil {
+	    logger.Error("failed to subscribe to user.created", "err", err)
+	    os.Exit(1)
+	}
 
 	// serve gRPC server
 	grpcServer := googleGrpc.NewServer(
@@ -69,6 +94,7 @@ func main() {
 	cancelInterrupt := make(chan struct{})
 	g.Add(shutdownHandler(cancelInterrupt), func(e error) {
 		close(cancelInterrupt)
+		amqpShutdown(userCreatedSubscriber)
 	})
 
 	// run
@@ -124,3 +150,18 @@ func initDebugHttp(logger log.Logger) net.Listener {
 	}
 	return debugListener
 }
+
+func amqpShutdown(subscribers ...amqp.Subscriber) func() error {
+	return func() error {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		select {
+		case sig := <-c:
+			for _, sub := range subscribers {
+				sub.Shutdown()
+			}
+			return fmt.Errorf("received signal %s", sig)
+		}
+	}
+}
+

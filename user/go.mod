@@ -11,6 +11,7 @@ require (
 	github.com/oklog/run v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.0.0
 	github.com/rs/xid v1.2.1
+	github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
 	google.golang.org/grpc v1.21.1
 )
 
