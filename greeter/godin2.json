@@ -1,0 +1,19 @@
+{
+  "godin": "v0.4.0",
+  "info": {
+    "title": "My super awesome microservice",
+    "description": "What this service does...",
+    "responsible": {
+      "name": "Lukas Jarosch"
+    }
+  },
+  "service": {
+    "endpoints": {
+      "hello": {
+        "middleware": {
+
+        }
+      }
+    }
+  }
+}

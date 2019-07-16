@@ -1,13 +1,13 @@
 package subscriber
 
 import (
-	"github.com/lukasjarosch/godin-examples/user/internal/service"
+	"github.com/go-godin/log"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/usecase"
 	godinAMQP "github.com/lukasjarosch/godin/pkg/amqp"
-	"github.com/lukasjarosch/godin/pkg/log"
 	"github.com/streadway/amqp"
 )
 
-func InitUserCreatedSubscriber(channel *amqp.Channel, svc service.User, logger log.Logger) (subscriber godinAMQP.Subscriber, err error) {
+func InitUserCreatedSubscriber(channel *amqp.Channel, svc usecase.Service, logger log.Logger) (subscriber godinAMQP.Subscriber, err error) {
 	subscription := &godinAMQP.Subscription{
 		Exchange: "exchange-name",
 		AutoAck:  false,

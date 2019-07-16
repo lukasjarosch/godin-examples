@@ -1,12 +1,13 @@
 package grpc
 
 import (
+	"github.com/lukasjarosch/godin-examples/user/internal/service/domain"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/usecase"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	pb "github.com/lukasjarosch/godin-examples/user/api"
 	"github.com/lukasjarosch/godin-examples/user/internal/service/endpoint"
-	"github.com/lukasjarosch/godin-examples/user/internal/service"
 )
 
 // ----------------[ ERRORS ]----------------
@@ -14,7 +15,7 @@ import (
 // EncodeError encodes domain-level errors into gRPC transport-level errors
 func EncodeError(err error) error {
 	switch err {
-	case service.ErrNotImplemented:
+	case domain.ErrNotImplemented:
 		return status.Error(codes.Unimplemented, err.Error())
 	default:
 		return status.Error(codes.Unknown, err.Error())
@@ -29,7 +30,7 @@ func EncodeError(err error) error {
 // CreateRequestDecoder maps the protobuf request of the gRPC transport layer onto the domain-level CreateRequest
 func CreateRequestDecoder(pbRequest *pb.CreateRequest) (request endpoint.CreateRequest, err error) {
 	request = endpoint.CreateRequest{
-		Email: pbRequest.Email,
+		Email:    pbRequest.Email,
 		Username: pbRequest.Name,
 	}
 	return request, nil
@@ -39,8 +40,8 @@ func CreateRequestDecoder(pbRequest *pb.CreateRequest) (request endpoint.CreateR
 func CreateResponseEncoder(response endpoint.CreateResponse) (pbResponse *pb.CreateResponse, err error) {
 	pbResponse = &pb.CreateResponse{
 		User: &pb.User{
-			Id: response.User.ID,
-			Name: response.User.Name,
+			Id:    response.User.ID,
+			Name:  response.User.Username,
 			Email: response.User.Email,
 		},
 	}
@@ -50,7 +51,7 @@ func CreateResponseEncoder(response endpoint.CreateResponse) (pbResponse *pb.Cre
 // CreateRequestEncoder encodes the domain-level CreateRequest into a protobuf CreateRequest
 func CreateRequestEncoder(request endpoint.CreateRequest) (pbRequest *pb.CreateRequest, err error) {
 	pbRequest = &pb.CreateRequest{
-		Name: request.Username,
+		Name:  request.Username,
 		Email: request.Email,
 	}
 	return pbRequest, nil
@@ -59,10 +60,10 @@ func CreateRequestEncoder(request endpoint.CreateRequest) (pbRequest *pb.CreateR
 // CreateResponseDecoder maps the protobuf response of the gRPC transport layer onto the domain-level CreateResponse
 func CreateResponseDecoder(pbResponse *pb.CreateResponse) (response endpoint.CreateResponse, err error) {
 	response = endpoint.CreateResponse{
-		User: &service.UserEntity{
-			ID: pbResponse.User.Id,
-			Email: pbResponse.User.Email,
-			Name: pbResponse.User.Name,
+		User: &usecase.User{
+			UserID:   pbResponse.User.Id,
+			Email:    pbResponse.User.Email,
+			Username: pbResponse.User.Name,
 		},
 	}
 	return response, nil
@@ -74,20 +75,17 @@ func GetRequestEncoder(request endpoint.GetRequest) (pbRequest *pb.GetRequest, e
 	return pbRequest, err
 }
 
-
 // GetResponseEncoder encodes the domain-level GetResponse into a protobuf GetResponse
 func GetResponseEncoder(response endpoint.GetResponse) (pbResponse *pb.GetResponse, err error) {
 	// TODO: map 'response' to 'pbResponse' and return
 	return pbResponse, err
 }
 
-
 // GetRequestDecoder maps the protobuf request of the gRPC transport layer onto the domain-level GetRequest
 func GetRequestDecoder(pbRequest *pb.GetRequest) (request endpoint.GetRequest, err error) {
 	// TODO: map 'pbRequest' to 'request' and return
 	return request, err
 }
-
 
 // GetResponseDecoder maps the protobuf response of the gRPC transport layer onto the domain-level GetResponse
 func GetResponseDecoder(pbResponse *pb.GetResponse) (response endpoint.GetResponse, err error) {
@@ -101,20 +99,17 @@ func ListRequestEncoder(request endpoint.ListRequest) (pbRequest *pb.ListRequest
 	return pbRequest, err
 }
 
-
 // ListResponseEncoder encodes the domain-level ListResponse into a protobuf ListResponse
 func ListResponseEncoder(response endpoint.ListResponse) (pbResponse *pb.ListResponse, err error) {
 	// TODO: map 'response' to 'pbResponse' and return
 	return pbResponse, err
 }
 
-
 // ListRequestDecoder maps the protobuf request of the gRPC transport layer onto the domain-level ListRequest
 func ListRequestDecoder(pbRequest *pb.ListRequest) (request endpoint.ListRequest, err error) {
 	// TODO: map 'pbRequest' to 'request' and return
 	return request, err
 }
-
 
 // ListResponseDecoder maps the protobuf response of the gRPC transport layer onto the domain-level ListResponse
 func ListResponseDecoder(pbResponse *pb.ListResponse) (response endpoint.ListResponse, err error) {
@@ -128,22 +123,19 @@ func DeleteRequestEncoder(request endpoint.DeleteRequest) (pbRequest *pb.DeleteR
 	return pbRequest, err
 }
 
-
 // DeleteResponseEncoder encodes the domain-level DeleteResponse into a protobuf DeleteResponse
 func DeleteResponseEncoder(response endpoint.DeleteResponse) (pbResponse *pb.EmptyResponse, err error) {
 	// TODO: map 'response' to 'pbResponse' and return
 	return pbResponse, err
 }
 
-
 // DeleteRequestDecoder maps the protobuf request of the gRPC transport layer onto the domain-level DeleteRequest
 func DeleteRequestDecoder(pbRequest *pb.DeleteRequest) (request endpoint.DeleteRequest, err error) {
 	request = endpoint.DeleteRequest{
-		Id:pbRequest.Id,
+		Id: pbRequest.Id,
 	}
 	return request, nil
 }
-
 
 // DeleteResponseDecoder maps the protobuf response of the gRPC transport layer onto the domain-level DeleteResponse
 func DeleteResponseDecoder(pbResponse *pb.EmptyResponse) (response endpoint.DeleteResponse, err error) {

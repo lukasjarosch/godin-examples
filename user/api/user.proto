@@ -39,3 +39,8 @@ message DeleteRequest {
     string id = 1;
 }
 message EmptyResponse {}
+
+
+message UserCreated {
+    User user = 1;
+}

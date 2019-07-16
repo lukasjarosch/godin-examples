@@ -2,21 +2,21 @@ package middleware
 
 import (
 	"context"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/usecase"
 	"time"
 
-	"github.com/lukasjarosch/godin/pkg/log"
+	"github.com/go-godin/log"
 
-	"github.com/lukasjarosch/godin-examples/user/internal/service"
 	"github.com/lukasjarosch/godin-examples/user/internal/service/endpoint"
 )
 
 type loggingMiddleware struct {
-	next   service.User
+	next   usecase.Service
 	logger log.Logger
 }
 
 func LoggingMiddleware(logger log.Logger) Middleware {
-	return func(next service.User) service.User {
+	return func(next usecase.Service) usecase.Service {
 		return &loggingMiddleware{next, logger}
 	}
 }
@@ -24,7 +24,7 @@ func LoggingMiddleware(logger log.Logger) Middleware {
 // Create logs the request and response of the service.Create endpoint
 // The runtime will also be logged. Once a request enters this middleware, the timer is started.
 // Upon leaving this middleware (deferred function is called), the time-delta is calculated.
-func (l loggingMiddleware) Create(ctx context.Context, username string, email string) (user *service.UserEntity, err error) {
+func (l loggingMiddleware) Create(ctx context.Context, username string, email string) (user *usecase.User, err error) {
 	l.logger.Log(
 		"endpoint", "Create",
 		"request", endpoint.CreateRequest{
@@ -51,7 +51,7 @@ func (l loggingMiddleware) Create(ctx context.Context, username string, email st
 // Get logs the request and response of the service.Get endpoint
 // The runtime will also be logged. Once a request enters this middleware, the timer is started.
 // Upon leaving this middleware (deferred function is called), the time-delta is calculated.
-func (l loggingMiddleware) Get(ctx context.Context, id string) (user *service.UserEntity, err error) {
+func (l loggingMiddleware) Get(ctx context.Context, id string) (user *usecase.User, err error) {
 	l.logger.Log(
 		"endpoint", "Get",
 		"request", endpoint.GetRequest{
@@ -77,7 +77,7 @@ func (l loggingMiddleware) Get(ctx context.Context, id string) (user *service.Us
 // List logs the request and response of the service.List endpoint
 // The runtime will also be logged. Once a request enters this middleware, the timer is started.
 // Upon leaving this middleware (deferred function is called), the time-delta is calculated.
-func (l loggingMiddleware) List(ctx context.Context) (users []*service.UserEntity, err error) {
+func (l loggingMiddleware) List(ctx context.Context) (users []*usecase.User, err error) {
 	l.logger.Log(
 		"endpoint", "List",
 		"request", endpoint.ListRequest{},

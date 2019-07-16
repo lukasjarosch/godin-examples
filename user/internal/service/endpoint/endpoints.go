@@ -4,17 +4,15 @@
 package endpoint
 
 import (
-    "context"
-    "github.com/go-kit/kit/endpoint"
+	"context"
 
-    "github.com/lukasjarosch/godin-examples/user/internal/service"
+	"github.com/go-kit/kit/endpoint"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/usecase"
 )
-
-
 
 // CreateEndpoint provides service.Create() as general endpoint
 // which can be used with arbitrary transport layers.
-func CreateEndpoint(service service.User) endpoint.Endpoint {
+func CreateEndpoint(service usecase.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(CreateRequest)
 		_ = req // bypass "declared and not used" compiler error if the request is empty and not used
@@ -29,7 +27,7 @@ func CreateEndpoint(service service.User) endpoint.Endpoint {
 
 // GetEndpoint provides service.Get() as general endpoint
 // which can be used with arbitrary transport layers.
-func GetEndpoint(service service.User) endpoint.Endpoint {
+func GetEndpoint(service usecase.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(GetRequest)
 		_ = req // bypass "declared and not used" compiler error if the request is empty and not used
@@ -44,7 +42,7 @@ func GetEndpoint(service service.User) endpoint.Endpoint {
 
 // ListEndpoint provides service.List() as general endpoint
 // which can be used with arbitrary transport layers.
-func ListEndpoint(service service.User) endpoint.Endpoint {
+func ListEndpoint(service usecase.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(ListRequest)
 		_ = req // bypass "declared and not used" compiler error if the request is empty and not used
@@ -57,10 +55,9 @@ func ListEndpoint(service service.User) endpoint.Endpoint {
 	}
 }
 
-
 // DeleteEndpoint provides service.Delete() as general endpoint
 // which can be used with arbitrary transport layers.
-func DeleteEndpoint(service service.User) endpoint.Endpoint {
+func DeleteEndpoint(service usecase.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(DeleteRequest)
 		_ = req // bypass "declared and not used" compiler error if the request is empty and not used
@@ -69,5 +66,15 @@ func DeleteEndpoint(service service.User) endpoint.Endpoint {
 		return DeleteResponse{
 			Err: err,
 		}, err
+	}
+}
+
+func UserCreatedEndpoint(subscribers usecase.Subscriber) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(UserCreatedEvent)
+		_ = req
+		err = subscribers.UserCreated(ctx, req.User)
+
+		return nil, err
 	}
 }

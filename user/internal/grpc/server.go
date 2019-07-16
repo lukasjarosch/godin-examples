@@ -7,9 +7,9 @@ import (
 
 	kitGrpc "github.com/go-kit/kit/transport/grpc"
 
+	"github.com/go-godin/log"
 	pb "github.com/lukasjarosch/godin-examples/user/api"
 	"github.com/lukasjarosch/godin-examples/user/internal/service/endpoint"
-	"github.com/lukasjarosch/godin/pkg/log"
 )
 
 type grpcServer struct {

@@ -5,9 +5,9 @@ package endpoint
 import (
 	"github.com/go-kit/kit/endpoint"
 
-	"github.com/lukasjarosch/godin-examples/user/internal/service"
-	"github.com/lukasjarosch/godin/pkg/log"
-	godinMiddleware "github.com/lukasjarosch/godin/pkg/middleware"
+	"github.com/go-godin/log"
+	godinMiddleware "github.com/go-godin/middleware"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/usecase"
 )
 
 type Set struct {
@@ -17,7 +17,7 @@ type Set struct {
 	DeleteEndpoint endpoint.Endpoint
 }
 
-func Endpoints(service service.User, logger log.Logger) Set {
+func Endpoints(service usecase.Service, logger log.Logger) Set {
 
 	var create endpoint.Endpoint
 	{

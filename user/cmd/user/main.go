@@ -3,13 +3,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/lukasjarosch/godin-examples/user/internal/service/subscriber"
-	"github.com/lukasjarosch/godin/pkg/amqp"
 	"net"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	amqp2 "github.com/lukasjarosch/godin-examples/user/internal/amqp"
+	"github.com/lukasjarosch/godin/pkg/amqp"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/oklog/oklog/pkg/group"
@@ -18,12 +19,11 @@ import (
 
 	pb "github.com/lukasjarosch/godin-examples/user/api"
 	svcGrpc "github.com/lukasjarosch/godin-examples/user/internal/grpc"
-	"github.com/lukasjarosch/godin-examples/user/internal/service"
 	"github.com/lukasjarosch/godin-examples/user/internal/service/endpoint"
 	"github.com/lukasjarosch/godin-examples/user/internal/service/middleware"
-	"github.com/lukasjarosch/godin-examples/user/internal/service/user"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/usecase"
 
-	"github.com/lukasjarosch/godin/pkg/log"
+	"github.com/go-godin/log"
 )
 
 var AmqpAddr = getEnv("AMQP_ADDRESS", "the-default-value")
@@ -34,7 +34,7 @@ var GrpcAddr = getEnv("GRPC_ADDRESS", "0.0.0.0:50051")
 var g group.Group
 
 func main() {
-	logger := log.New()
+	logger := log.NewLoggerFromEnv()
 
 	// init AMQP
 	rabbitMQ := amqp.NewRabbitMQ(AmqpAddr)
@@ -52,12 +52,20 @@ func main() {
 	}
 	defer rabbitMQ.Connection.Close()
 
+	// publisher
+	publisher := amqp2.NewPublisher(rabbitMQ.Channel, logger)
+
 	// initialize service layer
-	var svc service.User
-	svc = user.NewServiceImplementation(logger)
+	var svc usecase.Service
+	svc = usecase.NewServiceImplementation(&logger, publisher)
 	svc = middleware.LoggingMiddleware(logger)(svc)
 	//TODO: svc = middleware.AuthorizationMiddleware(logger)(svc)
 	//TODO: svc = middleware.RecoveringMiddleware(logger)(svc)
+
+	// subscriber
+	subscriptionHandler := usecase.NewSubscriptionHandler(&logger)
+	subscriptions := amqp2.Subscriptions(endpoint.Subscriptions(subscriptionHandler, logger), rabbitMQ.Channel)
+	subscriptions.SubscribeUserCreated()
 
 	// initialize endpoint and transport layers
 	var (
@@ -65,11 +73,13 @@ func main() {
 		grpcHandler = svcGrpc.NewServer(endpoints, logger)
 	)
 
-	userCreatedSubscriber, err := subscriber.InitUserCreatedSubscriber(rabbitMQ.Channel, svc, logger)
-	if err != nil {
-	    logger.Error("failed to subscribe to user.created", "err", err)
-	    os.Exit(1)
-	}
+	/*
+		userCreatedSubscriber, err := subscriber.InitUserCreatedSubscriber(rabbitMQ.Channel, svc, logger)
+		if err != nil {
+			logger.Error("failed to subscribe to user.created", "err", err)
+			os.Exit(1)
+		}
+	*/
 
 	// serve gRPC server
 	grpcServer := googleGrpc.NewServer(
@@ -94,7 +104,6 @@ func main() {
 	cancelInterrupt := make(chan struct{})
 	g.Add(shutdownHandler(cancelInterrupt), func(e error) {
 		close(cancelInterrupt)
-		amqpShutdown(userCreatedSubscriber)
 	})
 
 	// run
@@ -164,4 +173,3 @@ func amqpShutdown(subscribers ...amqp.Subscriber) func() error {
 		}
 	}
 }
-

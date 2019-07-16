@@ -3,7 +3,7 @@
 package endpoint
 
 import (
-	"github.com/lukasjarosch/godin-examples/user/internal/service"
+	"github.com/lukasjarosch/godin-examples/user/internal/service/usecase"
 )
 
 type (
@@ -13,8 +13,8 @@ type (
 	}
 
 	CreateResponse struct {
-		User *service.UserEntity `json:"user"`
-		Err  error               `json:"-"`
+		User *usecase.User `json:"user"`
+		Err  error         `json:"-"`
 	}
 
 	GetRequest struct {
@@ -22,16 +22,16 @@ type (
 	}
 
 	GetResponse struct {
-		User *service.UserEntity `json:"user"`
-		Err  error               `json:"-"`
+		User *usecase.User `json:"user"`
+		Err  error         `json:"-"`
 	}
 
 	ListRequest struct {
 	}
 
 	ListResponse struct {
-		Users []*service.UserEntity `json:"users"`
-		Err   error                 `json:"-"`
+		Users []*usecase.User `json:"users"`
+		Err   error           `json:"-"`
 	}
 
 	DeleteRequest struct {
@@ -40,6 +40,10 @@ type (
 
 	DeleteResponse struct {
 		Err error `json:"-"`
+	}
+
+	UserCreatedEvent struct {
+		User *usecase.User
 	}
 )
 
