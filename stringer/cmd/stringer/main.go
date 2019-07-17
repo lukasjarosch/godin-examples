@@ -52,7 +52,7 @@ func main() {
 		logger.Error("failed to create subscription", "err", err)
 		os.Exit(-1)
 	}
-	if err := subscriptions.UserUpdatedSubscriber(logger, svc); err != nil {
+	if err := subscriptions.UserDeletedSubscriber(logger, svc); err != nil {
 		logger.Error("failed to create subscription", "err", err)
 		os.Exit(-1)
 	}

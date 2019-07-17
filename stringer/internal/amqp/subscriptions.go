@@ -15,8 +15,7 @@ import (
 
 type SubscriberSet struct {
 	userCreatedSubscriber rabbitmq.Subscriber
-
-	userUpdatedSubscriber rabbitmq.Subscriber
+	userDeletedSubscriber rabbitmq.Subscriber
 }
 
 // Subscriptions will initialize all AMQP subscriptions
@@ -35,20 +34,25 @@ func Subscriptions(channel *amqp.Channel) SubscriberSet {
 			},
 		}),
 
-		userUpdatedSubscriber: rabbitmq.NewSubscriber(channel, &rabbitmq.Subscription{
+		userDeletedSubscriber: rabbitmq.NewSubscriber(channel, &rabbitmq.Subscription{
 			Exchange: "exchange-name",
-			Topic:    "user.updated",
+			Topic:    "user.deleted",
 			AutoAck:  false,
 			Queue: rabbitmq.SubscriptionQueue{
 				AutoDelete: false,
 				Durable:    true,
 				Exclusive:  false,
-				Name:       "user-updated-queue",
+				Name:       "user-deleted-queue",
 				NoWait:     false,
 			},
 		}),
 	}
 }
+
+// UserCreatedSubscriber sets up the subscription to the 'user.created' topic. All middleware is automatically registered
+// and called in the following order: RequestID => PrometheusInstrumentation => Logging => subscriber.UserCreatedSubscriber
+// The RequestID middlware will extract the requestId from the delivery header or generate a new one. The requestId is
+// then mad available through the context.
 func (ss SubscriberSet) UserCreatedSubscriber(logger log.Logger, usecase service.Stringer) error {
 	handler := subscriber.UserCreatedSubscriber(logger, usecase)
 	handler = middleware.Logging(logger, "user.created", handler)
@@ -70,21 +74,25 @@ func (ss SubscriberSet) UserCreatedSubscriber(logger log.Logger, usecase service
 	return nil
 }
 
-func (ss SubscriberSet) UserUpdatedSubscriber(logger log.Logger, usecase service.Stringer) error {
-	handler := subscriber.UserUpdatedSubscriber(logger, usecase)
-	handler = middleware.Logging(logger, "user.updated", handler)
-	handler = middleware.PrometheusInstrumentation("user.updated", handler)
+// UserDeletedSubscriber sets up the subscription to the 'user.deleted' topic. All middleware is automatically registered
+// and called in the following order: RequestID => PrometheusInstrumentation => Logging => subscriber.UserDeletedSubscriber
+// The RequestID middlware will extract the requestId from the delivery header or generate a new one. The requestId is
+// then mad available through the context.
+func (ss SubscriberSet) UserDeletedSubscriber(logger log.Logger, usecase service.Stringer) error {
+	handler := subscriber.UserDeletedSubscriber(logger, usecase)
+	handler = middleware.Logging(logger, "user.deleted", handler)
+	handler = middleware.PrometheusInstrumentation("user.deleted", handler)
 	handler = middleware.RequestID(handler)
 
-	if err := ss.userUpdatedSubscriber.Subscribe(handler); err != nil {
-		logger.Error("failed to subscribe to user.updated", "err", err, "transport", "AMQP")
-		return errors.Wrap(err, "failed to subscribe to user.updated")
+	if err := ss.userDeletedSubscriber.Subscribe(handler); err != nil {
+		logger.Error("failed to subscribe to user.deleted", "err", err, "transport", "AMQP")
+		return errors.Wrap(err, "failed to subscribe to user.deleted")
 	}
 	logger.Info(
-		"subscribed to topic 'user.updated'",
-		"topic", ss.userUpdatedSubscriber.Subscription.Topic,
-		"queue", ss.userUpdatedSubscriber.Subscription.Queue.Name,
-		"exchange", ss.userUpdatedSubscriber.Subscription.Exchange,
+		"subscribed to topic 'user.deleted'",
+		"topic", ss.userDeletedSubscriber.Subscription.Topic,
+		"queue", ss.userDeletedSubscriber.Subscription.Queue.Name,
+		"exchange", ss.userDeletedSubscriber.Subscription.Exchange,
 		"transport", "AMQP",
 	)
 
@@ -94,6 +102,7 @@ func (ss SubscriberSet) UserUpdatedSubscriber(logger log.Logger, usecase service
 // Shutdown will call Shutdown() on all registered subscriptions
 func (ss SubscriberSet) Shutdown() (err error) {
 	err = ss.userCreatedSubscriber.Shutdown()
+	err = ss.userDeletedSubscriber.Shutdown()
 
 	return err
 }

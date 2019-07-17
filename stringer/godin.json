@@ -7,7 +7,7 @@
   },
   "project": {
     "created": "Wed, 17 Jul 2019 13:36:44 CEST",
-    "updated": "Wed, 17 Jul 2019 15:01:29 CEST"
+    "updated": "Wed, 17 Jul 2019 15:55:38 CEST"
   },
   "protobuf": {
     "package": "github.com/lukasjarosch/godin-examples/greeter/api",
@@ -26,7 +26,8 @@
       "authorization": false,
       "caching": false,
       "logging": true,
-      "recovery": true
+      "monitoring": false,
+      "recovery": false
     },
     "module": "github.com/lukasjarosch/godin-examples/stringer",
     "name": "stringer",
@@ -49,17 +50,17 @@
           },
           "topic": "user.created"
         },
-        "user_updated": {
+        "user_deleted": {
           "auto_ack": false,
           "exchange": "exchange-name",
           "queue": {
             "auto_delete": false,
             "durable": true,
             "exclusive": false,
-            "name": "user-updated-queue",
+            "name": "user-deleted-queue",
             "no_wait": false
           },
-          "topic": "user.updated"
+          "topic": "user.deleted"
         }
       }
     },
