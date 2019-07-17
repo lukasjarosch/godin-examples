@@ -1,0 +1,70 @@
+{
+  "docker": {
+    "registry": "registry.hub.docker.com"
+  },
+  "godin": {
+    "version": "v0.4.0"
+  },
+  "project": {
+    "created": "Wed, 17 Jul 2019 13:36:44 CEST",
+    "updated": "Wed, 17 Jul 2019 15:01:29 CEST"
+  },
+  "protobuf": {
+    "package": "github.com/lukasjarosch/godin-examples/greeter/api",
+    "service": "GreeterService"
+  },
+  "service": {
+    "endpoints": {
+      "hello": {
+        "protobuf": {
+          "request": "HelloRequest",
+          "response": "HelloResponse"
+        }
+      }
+    },
+    "middleware": {
+      "authorization": false,
+      "caching": false,
+      "logging": true,
+      "recovery": true
+    },
+    "module": "github.com/lukasjarosch/godin-examples/stringer",
+    "name": "stringer",
+    "namespace": "godin"
+  },
+  "transport": {
+    "amqp": {
+      "default_address": "amqp://eiefufpz:ssifxebQqnbqswvVEIV7QIo1M35neHzv@sheep.rmq.cloudamqp.com/eiefufpz",
+      "enabled": true,
+      "subscriber": {
+        "user_created": {
+          "auto_ack": false,
+          "exchange": "exchange-name",
+          "queue": {
+            "auto_delete": false,
+            "durable": true,
+            "exclusive": false,
+            "name": "user-created-queue",
+            "no_wait": false
+          },
+          "topic": "user.created"
+        },
+        "user_updated": {
+          "auto_ack": false,
+          "exchange": "exchange-name",
+          "queue": {
+            "auto_delete": false,
+            "durable": true,
+            "exclusive": false,
+            "name": "user-updated-queue",
+            "no_wait": false
+          },
+          "topic": "user.updated"
+        }
+      }
+    },
+    "grpc": {
+      "enabled": true
+    }
+  }
+}
