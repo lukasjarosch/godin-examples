@@ -3,7 +3,6 @@ package amqp
 
 import (
 	"github.com/pkg/errors"
-	"github.com/streadway/amqp"
 
 	"github.com/go-godin/log"
 	middleware "github.com/go-godin/middleware/amqp"
@@ -18,10 +17,14 @@ type SubscriberSet struct {
 	userDeletedSubscriber rabbitmq.Subscriber
 }
 
-// Subscriptions will initialize all AMQP subscriptions
-func Subscriptions(channel *amqp.Channel) SubscriberSet {
+// Subscriptions will initialize all AMQP subscriptions. For each subscription, a new AMQP channel is created on which
+// the Consume() goroutine will run (one channel per thread policy).
+func Subscriptions(conn *rabbitmq.RabbitMQ) SubscriberSet {
+	userCreatedSubscriberChannel, _ := conn.NewChannel()
+	userDeletedSubscriberChannel, _ := conn.NewChannel()
+
 	return SubscriberSet{
-		userCreatedSubscriber: rabbitmq.NewSubscriber(channel, &rabbitmq.Subscription{
+		userCreatedSubscriber: rabbitmq.NewSubscriber(userCreatedSubscriberChannel, &rabbitmq.Subscription{
 			Exchange: "exchange-name",
 			Topic:    "user.created",
 			AutoAck:  false,
@@ -34,7 +37,7 @@ func Subscriptions(channel *amqp.Channel) SubscriberSet {
 			},
 		}),
 
-		userDeletedSubscriber: rabbitmq.NewSubscriber(channel, &rabbitmq.Subscription{
+		userDeletedSubscriber: rabbitmq.NewSubscriber(userDeletedSubscriberChannel, &rabbitmq.Subscription{
 			Exchange: "exchange-name",
 			Topic:    "user.deleted",
 			AutoAck:  false,

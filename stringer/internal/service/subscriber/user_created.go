@@ -5,6 +5,8 @@ import (
 	grpc_metadata "github.com/go-godin/grpc-metadata"
 	"github.com/go-godin/log"
 	"github.com/go-godin/rabbitmq"
+	"github.com/golang/protobuf/proto"
+	pb "github.com/lukasjarosch/godin-examples/greeter/api"
 
 	"github.com/lukasjarosch/godin-examples/stringer/internal/service"
 )
@@ -13,7 +15,17 @@ import (
 func UserCreatedSubscriber(logger log.Logger, usecase service.Stringer) rabbitmq.SubscriptionHandler {
 	return func(ctx context.Context, delivery *rabbitmq.Delivery) {
 		// the requestId is injected into the context and should be attached on every log
-		logger = logger.With(ctx.Value(string(grpc_metadata.RequestID)), ctx.Value(string(grpc_metadata.RequestID)))
+		logger = logger.With(string(grpc_metadata.RequestID), ctx.Value(string(grpc_metadata.RequestID)))
+
+		evt := &pb.UserCreatedEvent{}
+		if err := proto.Unmarshal(delivery.Body, evt); err != nil {
+			logger.Error("unable to unmarshal event", "err", err)
+			delivery.IncrementTransportErrorCounter("user.created")
+			delivery.NackDelivery(false, false, "user.created")
+			return
+		}
+
+		logger.Info("received user.created event", "evt", evt)
 
 		// TODO: Handle user.created subscription
 		/*

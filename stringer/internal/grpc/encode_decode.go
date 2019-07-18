@@ -16,6 +16,8 @@ func EncodeError(err error) error {
 	switch err {
 	case domain.ErrNotImplemented:
 		return status.Error(codes.Unimplemented, err.Error())
+	case domain.ErrUnauthenticated:
+		return status.Error(codes.Unauthenticated, err.Error())
 	default:
 		return status.Error(codes.Unknown, err.Error())
 	}
@@ -29,13 +31,15 @@ func EncodeError(err error) error {
 // ----------------[ ENCODER / DECODER ]----------------
 // HelloRequestDecoder maps the protobuf request of the gRPC transport layer onto the domain-level HelloRequest
 func HelloRequestDecoder(pbRequest *pb.HelloRequest) (request endpoint.HelloRequest, err error) {
-	// TODO: map 'pbRequest' to 'request' and return
+	request = endpoint.HelloRequest{
+		Name: "Hans Peter",
+	}
 	return request, err
 }
 
 // HelloResponseEncoder encodes the domain-level HelloResponse into a protobuf HelloResponse
 func HelloResponseEncoder(response endpoint.HelloResponse) (pbResponse *pb.HelloResponse, err error) {
-	// TODO: map 'response' to 'pbResponse' and return
+	pbResponse = &pb.HelloResponse{}
 	return pbResponse, err
 }
 

@@ -9,8 +9,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/go-godin/grpc-interceptor"
 	"github.com/go-godin/rabbitmq"
-	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/oklog/oklog/pkg/group"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	googleGrpc "google.golang.org/grpc"
@@ -34,20 +34,26 @@ var g group.Group
 
 func main() {
 	logger := log.NewLoggerFromEnv()
+	rabbitmqSubConn := initRabbitMQ(logger)
+	defer rabbitmqSubConn.Close()
+	rabbitmqPubConn := initRabbitMQ(logger)
+	defer rabbitmqPubConn.Close()
+	// init publishers
+	publishers := amqp.Publishers(rabbitmqPubConn, logger)
 
 	// initialize service including middleware
 	var svc service.Stringer
-	svc = usecase.NewServiceImplementation(logger)
+
+	svc = usecase.NewServiceImplementation(logger, publishers)
 	svc = middleware.LoggingMiddleware(logger)(svc)
 
 	// initialize endpoint and transport layers
 	var (
-		endpoints    = endpoint.Endpoints(svc, logger)
-		grpcHandler  = svcGrpc.NewServer(endpoints, logger)
-		rabbitmqConn = initRabbitMQ(logger)
+		endpoints   = endpoint.Endpoints(svc, logger)
+		grpcHandler = svcGrpc.NewServer(endpoints, logger)
 	)
 	// setup AMQP subscriptions
-	subscriptions := amqp.Subscriptions(rabbitmqConn.Channel)
+	subscriptions := amqp.Subscriptions(rabbitmqSubConn)
 	if err := subscriptions.UserCreatedSubscriber(logger, svc); err != nil {
 		logger.Error("failed to create subscription", "err", err)
 		os.Exit(-1)
@@ -59,12 +65,11 @@ func main() {
 
 	// serve gRPC server
 	grpcServer := googleGrpc.NewServer(
-		googleGrpc.UnaryInterceptor(grpcPrometheus.UnaryServerInterceptor),
+		googleGrpc.UnaryInterceptor(grpc_interceptor.UnaryInterceptor),
 	)
 	g.Add(initGrpc(grpcServer, grpcHandler, logger), func(error) {
 		grpcServer.GracefulStop()
 	})
-	grpcPrometheus.Register(grpcServer)
 
 	// serve debug http server (prometheus)
 	http.DefaultServeMux.Handle("/metrics", promhttp.Handler())
@@ -138,7 +143,7 @@ func initRabbitMQ(logger log.Logger) *rabbitmq.RabbitMQ {
 		logger.Error("failed to connect to RabbitMQ", "err", err)
 		os.Exit(-1)
 	}
-	if err := rabbitmqConn.NewChannel(); err != nil {
+	if rabbitmqConn.Channel, err = rabbitmqConn.NewChannel(); err != nil {
 		logger.Error("failed to create AMQP channel", "err", err)
 		os.Exit(-1)
 	}

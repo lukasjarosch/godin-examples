@@ -6,3 +6,8 @@ service GreeterService {
 
 message HelloRequest {}
 message HelloResponse {}
+
+message UserCreatedEvent {
+  string id = 1;
+  string email = 2;
+}

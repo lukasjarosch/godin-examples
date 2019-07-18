@@ -4,7 +4,7 @@ metadata:
   labels:
     app: stringer
     platform: go
-    framework: go-kit
+    framework: gokit
     generator: godin
     version: godin-stringer-version
   name: stringer
@@ -30,26 +30,36 @@ spec:
       labels:
         app: stringer
         platform: go
-        framework: go-kit
+        framework: gokit
         generator: godin
         version: godin-stringer-version
     spec:
       containers:
         - env:
-            - name: GRPC_PORT
-              value: "50051"
+            - name: TZ
+              value: Europe/Zurich
+            - name: GRPC_ADDRESS
+              value: "0.0.0.0:50051"
+            - name: DEBUG_ADDRESS
+              value: "0.0.0.0:3000"
             - name: LOG_LEVEL
               value: "info"
           image: registry.hub.docker.com/godin-stringer:godin-stringer-version
           imagePullPolicy: IfNotPresent
-          name: contact
-          resources: {}
+          name: stringer
+          resources:
+          	requests:
+          	  cpu: 1m
+              memory: 15Mi
           securityContext:
             allowPrivilegeEscalation: false
-            capabilities: {}
             privileged: false
-            readOnlyRootFilesystem: false
-            runAsNonRoot: false
+            capabilities:
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
           stdin: true
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File

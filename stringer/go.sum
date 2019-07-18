@@ -25,7 +25,10 @@ github.com/fatih/structtag v1.0.0/go.mod h1:IKitwq45uXL/yqi5mYghiD3w9H6eTOvI9vnk
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/go-godin/grpc-metadata v0.0.0-20190712125646-04ceb265ac8a h1:H6PV/RmEFBiimzeI9UbaziI4xNTEaSLHGmbYKp+wsJk=
 github.com/go-godin/grpc-metadata v0.0.0-20190712125646-04ceb265ac8a/go.mod h1:8l5js6oXPPupjhdJrmYVaJuidrUyr+Q3V75iZJAZ974=
+github.com/go-godin/grpc-metadata v0.0.0-20190717081641-be8cff64989a h1:M7HE/lFQQ8zczy6/U6Rl+f+8Do0EdHBsmywWiapF4pk=
+github.com/go-godin/grpc-metadata v0.0.0-20190717081641-be8cff64989a/go.mod h1:8l5js6oXPPupjhdJrmYVaJuidrUyr+Q3V75iZJAZ974=
 github.com/go-godin/log v0.0.0-20190712151708-ebfdb407f47f/go.mod h1:foeoqZOKhUxkgzb1i/Mn7DPj+3/NKFuLCBN1DxFhv8Y=
+github.com/go-godin/log v0.0.0-20190715125052-26f1fab6b64a/go.mod h1:foeoqZOKhUxkgzb1i/Mn7DPj+3/NKFuLCBN1DxFhv8Y=
 github.com/go-godin/log v0.0.0-20190716173926-b62a2fca0801 h1:pL0q4o9YI3KgpazoHN9uYUp3bsE2GBemMMOkREy/zow=
 github.com/go-godin/log v0.0.0-20190716173926-b62a2fca0801/go.mod h1:foeoqZOKhUxkgzb1i/Mn7DPj+3/NKFuLCBN1DxFhv8Y=
 github.com/go-godin/middleware v0.0.0-20190715143930-be7d7bc7f5dd/go.mod h1:13r9QW2K0E3Fiygd8l4XKb1PXSJuvyttk96JMJGBK1M=
@@ -89,8 +92,11 @@ github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515/go.mod h1:+0opPa2QZZtGFB
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/lukasjarosch/godin v0.0.0-20190623111143-62716b922f9c/go.mod h1:kklCdoglGPnnNRr9XKPGd2OrQYGiFcSa1xtQe2lfbbY=
 github.com/lukasjarosch/godin v0.4.0/go.mod h1:kklCdoglGPnnNRr9XKPGd2OrQYGiFcSa1xtQe2lfbbY=
 github.com/lukasjarosch/godin-examples v0.0.0-20190628232520-2fdfaef11421 h1:Or+2bWHEBzQfOrLvEqlrNukPbnacOBf4HNf8hdnOfJw=
+github.com/lukasjarosch/godin-examples/user v0.0.0-20190717135725-2e6d11a47b78 h1:8jcO2/7nGL2W+rwnGXlujZORhScqvQvG4q930AFdlIE=
+github.com/lukasjarosch/godin-examples/user v0.0.0-20190717135725-2e6d11a47b78/go.mod h1:pIFHXj/wCiqdIpr/xca++qH0Bs0ElsB+J6Mh6p2FTSs=
 github.com/lunixbochs/vtclean v0.0.0-20180621232353-2d01aacdc34a/go.mod h1:pHhQNgMf3btfWnGBVipUOjRYhoOsdGqdm/+2c2E2WMI=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
 github.com/manifoldco/promptui v0.3.2/go.mod h1:8JU+igZ+eeiiRku4T5BjtKh2ms8sziGpSYl1gN8Bazw=
@@ -129,10 +135,13 @@ github.com/prometheus/procfs v0.0.2/go.mod h1:TjEm7ze935MbeOT/UhFTIMYKhuLP4wbCsT
 github.com/rogpeppe/go-internal v1.1.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.2.2/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
+github.com/rs/xid v1.2.1 h1:mhH9Nq+C1fY2l1XIpgxIiUOfNpRBYH1kKcr+qfKgjRc=
+github.com/rs/xid v1.2.1/go.mod h1:+uKXf+4Djp6Md1KODXJxgGQPKngRmWyn10oCKFzNHOQ=
 github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/sirupsen/logrus v1.4.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/sirupsen/logrus v1.4.1/go.mod h1:ni0Sbl8bgC9z8RoU9G6nDWqqs/fq4eDPysMBDgk/93Q=
+github.com/sirupsen/logrus v1.4.2 h1:SPIRibHv4MatM3XXNO2BJeFLZwZ2LvZgfQ5+UNI2im4=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=
 github.com/spf13/cast v1.3.0/go.mod h1:Qx5cxh0v+4UWYiBimWS+eyWzqEqokIECu5etghLkUJE=

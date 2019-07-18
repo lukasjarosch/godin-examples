@@ -7,7 +7,7 @@
   },
   "project": {
     "created": "Wed, 17 Jul 2019 13:36:44 CEST",
-    "updated": "Wed, 17 Jul 2019 15:55:38 CEST"
+    "updated": "Thu, 18 Jul 2019 17:08:32 CEST"
   },
   "protobuf": {
     "package": "github.com/lukasjarosch/godin-examples/greeter/api",
@@ -37,6 +37,14 @@
     "amqp": {
       "default_address": "amqp://eiefufpz:ssifxebQqnbqswvVEIV7QIo1M35neHzv@sheep.rmq.cloudamqp.com/eiefufpz",
       "enabled": true,
+      "publisher": {
+        "user_created": {
+          "delivery_mode": 2,
+          "exchange": "exchange-name",
+          "protobuf_message": "UserCreatedEvent",
+          "topic": "user.created"
+        }
+      },
       "subscriber": {
         "user_created": {
           "auto_ack": false,
@@ -65,7 +73,13 @@
       }
     },
     "grpc": {
-      "enabled": true
+      "client": {
+        "enabled": false
+      },
+      "enabled": true,
+      "server": {
+        "enabled": true
+      }
     }
   }
 }
