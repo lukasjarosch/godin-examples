@@ -1,0 +1,40 @@
+{
+  "docker": {
+    "registry": "yyy"
+  },
+  "godin": {
+    "version": "v0.4.0"
+  },
+  "project": {
+    "created": "Sat, 29 Jun 2019 10:47:15 CEST",
+    "updated": "Sat, 29 Jun 2019 14:22:05 CEST"
+  },
+  "protobuf": {
+    "package": "github.com/lukasjarosch/godin-examples/user/api",
+    "service": "yyy"
+  },
+  "service": {
+    "endpoints": {
+      "hello": {
+        "protobuf": {
+          "request": "HelloRequest",
+          "response": "HelloResponse"
+        }
+      }
+    },
+    "middleware": {
+      "authorization": false,
+      "caching": false,
+      "logging": true,
+      "recovery": true
+    },
+    "module": "yyy",
+    "name": "yyy",
+    "namespace": "yyy"
+  },
+  "transport": {
+    "grpc": {
+      "enabled": true
+    }
+  }
+}

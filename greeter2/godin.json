@@ -1,0 +1,40 @@
+{
+  "docker": {
+    "registry": "registry.hub.docker.com"
+  },
+  "godin": {
+    "version": "v0.4.0"
+  },
+  "project": {
+    "created": "Tue, 16 Jul 2019 14:19:06 CEST",
+    "updated": "Tue, 16 Jul 2019 14:19:46 CEST"
+  },
+  "protobuf": {
+    "package": "github.com/lukasjarosch/godin-examples/greeter",
+    "service": "GreeterService"
+  },
+  "service": {
+    "endpoints": {
+      "hello": {
+        "protobuf": {
+          "request": "HelloRequest",
+          "response": "HelloResponse"
+        }
+      }
+    },
+    "middleware": {
+      "authorization": false,
+      "caching": false,
+      "logging": true,
+      "recovery": true
+    },
+    "module": "github.com/lukasjarosch/godin-examples/greeter2",
+    "name": "greeter",
+    "namespace": "godin"
+  },
+  "transport": {
+    "grpc": {
+      "enabled": true
+    }
+  }
+}

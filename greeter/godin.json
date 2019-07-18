@@ -1,0 +1,57 @@
+{
+  "docker": {
+    "registry": "registry.hub.docker.com"
+  },
+  "godin": {
+    "version": "v0.4.0"
+  },
+  "project": {
+    "created": "Sat, 29 Jun 2019 14:26:29 CEST",
+    "updated": "Wed, 03 Jul 2019 17:35:51 CEST"
+  },
+  "protobuf": {
+    "package": "github.com/lukasjarosch/godin-examples/greeter/api",
+    "service": "GreeterService"
+  },
+  "service": {
+    "endpoints": {
+      "hello": {
+        "protobuf": {
+          "request": "HelloRequest",
+          "response": "HelloResponse"
+        }
+      }
+    },
+    "middleware": {
+      "authorization": false,
+      "caching": false,
+      "logging": true,
+      "recovery": true
+    },
+    "module": "github.com/lukasjarosch/godin-examples/greeter",
+    "name": "greeter",
+    "namespace": "greeter"
+  },
+  "transport": {
+    "amqp": {
+      "default_address": "amqp://username:password@host:port/vhost",
+      "subscriber": {
+        "user_created": {
+          "auto_ack": false,
+          "exchange": "user-exchange",
+          "queue": {
+            "auto_delete": false,
+            "durable": true,
+            "exclusive": false,
+            "name": "user-created-queue",
+            "no_wait": false
+          },
+          "topic": "user.created"
+        }
+      }
+    },
+    "grpc": {
+      "enabled": true
+    }
+  }
+}
