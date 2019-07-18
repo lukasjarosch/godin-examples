@@ -31,6 +31,7 @@ github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/go-godin/grpc-metadata v0.0.0-20190712125646-04ceb265ac8a h1:H6PV/RmEFBiimzeI9UbaziI4xNTEaSLHGmbYKp+wsJk=
 github.com/go-godin/grpc-metadata v0.0.0-20190712125646-04ceb265ac8a/go.mod h1:8l5js6oXPPupjhdJrmYVaJuidrUyr+Q3V75iZJAZ974=
+github.com/go-godin/grpc-metadata v0.0.0-20190717081641-be8cff64989a/go.mod h1:8l5js6oXPPupjhdJrmYVaJuidrUyr+Q3V75iZJAZ974=
 github.com/go-godin/log v0.0.0-20190712151708-ebfdb407f47f h1:4E0B1BxHnQWufUumX1pL8v3RETyZWCP+Qp8/+JiR/1U=
 github.com/go-godin/log v0.0.0-20190712151708-ebfdb407f47f/go.mod h1:foeoqZOKhUxkgzb1i/Mn7DPj+3/NKFuLCBN1DxFhv8Y=
 github.com/go-godin/log v0.0.0-20190715125052-26f1fab6b64a h1:7mvaqdVXfVFOAgbiWNkBMVED9eaJF41FmYkcvh/qFww=
@@ -46,6 +47,7 @@ github.com/go-godin/rabbitmq v0.0.0-20190718120642-efd53c4fcd3d/go.mod h1:fO91iy
 github.com/go-godin/rabbitmq v0.0.0-20190718122420-0bb988ab077a/go.mod h1:fO91iywDopq8wdK/EDvQkIXf1pmZBgEgI7Mkg+tiFVc=
 github.com/go-godin/rabbitmq v0.0.0-20190718123150-841efeb3fbb8/go.mod h1:fO91iywDopq8wdK/EDvQkIXf1pmZBgEgI7Mkg+tiFVc=
 github.com/go-godin/rabbitmq v0.0.0-20190718123308-7135d018437c/go.mod h1:fO91iywDopq8wdK/EDvQkIXf1pmZBgEgI7Mkg+tiFVc=
+github.com/go-godin/rabbitmq v0.0.0-20190718163615-1e522570d2b0/go.mod h1:MJrnf5cgsXgUIRmkmcA57XW7pRWlXSXRqZlS0NcdeAY=
 github.com/go-kit/kit v0.8.0 h1:Wz+5lgoB0kkuqLEc6NVmwRknTKP6dTGbSqvhZtBI/j0=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-kit/kit v0.9.0 h1:wDJmvq38kDhkVxi50ni9ykkdUr1PKgqKOoi01fa0Mdk=

@@ -7,7 +7,7 @@
   },
   "project": {
     "created": "Wed, 17 Jul 2019 13:36:44 CEST",
-    "updated": "Thu, 18 Jul 2019 17:08:32 CEST"
+    "updated": "Thu, 18 Jul 2019 18:41:27 CEST"
   },
   "protobuf": {
     "package": "github.com/lukasjarosch/godin-examples/greeter/api",
@@ -47,28 +47,23 @@
       },
       "subscriber": {
         "user_created": {
-          "auto_ack": false,
-          "exchange": "exchange-name",
-          "queue": {
-            "auto_delete": false,
-            "durable": true,
-            "exclusive": false,
-            "name": "user-created-queue",
-            "no_wait": false
+          "handler_name": "UserCreated",
+          "protobuf": {
+            "go_module": "github.com/lukasjarosch/godin-examples/greeter/api",
+            "message_name": "UserCreatedEvent"
           },
-          "topic": "user.created"
-        },
-        "user_deleted": {
-          "auto_ack": false,
-          "exchange": "exchange-name",
-          "queue": {
-            "auto_delete": false,
-            "durable": true,
-            "exclusive": false,
-            "name": "user-deleted-queue",
-            "no_wait": false
-          },
-          "topic": "user.deleted"
+          "rabbitmq": {
+            "auto_ack": false,
+            "exchange": "exchange-name",
+            "queue": {
+              "auto_delete": false,
+              "durable": true,
+              "exclusive": false,
+              "name": "user-created-queue",
+              "no_wait": false
+            },
+            "topic": "user.created"
+          }
         }
       }
     },

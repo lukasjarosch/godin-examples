@@ -54,11 +54,7 @@ func main() {
 	)
 	// setup AMQP subscriptions
 	subscriptions := amqp.Subscriptions(rabbitmqSubConn)
-	if err := subscriptions.UserCreatedSubscriber(logger, svc); err != nil {
-		logger.Error("failed to create subscription", "err", err)
-		os.Exit(-1)
-	}
-	if err := subscriptions.UserDeletedSubscriber(logger, svc); err != nil {
+	if err := subscriptions.UserCreated(logger, svc); err != nil {
 		logger.Error("failed to create subscription", "err", err)
 		os.Exit(-1)
 	}
