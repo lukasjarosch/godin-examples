@@ -1,0 +1,85 @@
+{
+  "docker": {
+    "registry": "registry.hub.docker.com"
+  },
+  "godin": {
+    "version": "v0.4.0"
+  },
+  "project": {
+    "created": "Wed, 17 Jul 2019 13:36:44 CEST",
+    "updated": "Thu, 18 Jul 2019 17:08:32 CEST"
+  },
+  "protobuf": {
+    "package": "github.com/lukasjarosch/godin-examples/greeter/api",
+    "service": "GreeterService"
+  },
+  "service": {
+    "endpoints": {
+      "hello": {
+        "protobuf": {
+          "request": "HelloRequest",
+          "response": "HelloResponse"
+        }
+      }
+    },
+    "middleware": {
+      "authorization": false,
+      "caching": false,
+      "logging": true,
+      "monitoring": false,
+      "recovery": false
+    },
+    "module": "github.com/lukasjarosch/godin-examples/stringer",
+    "name": "stringer",
+    "namespace": "godin"
+  },
+  "transport": {
+    "amqp": {
+      "default_address": "amqp://user:pass@host/vhost",
+      "enabled": true,
+      "publisher": {
+        "user_created": {
+          "delivery_mode": 2,
+          "exchange": "exchange-name",
+          "protobuf_message": "UserCreatedEvent",
+          "topic": "user.created"
+        }
+      },
+      "subscriber": {
+        "user_created": {
+          "auto_ack": false,
+          "exchange": "exchange-name",
+          "queue": {
+            "auto_delete": false,
+            "durable": true,
+            "exclusive": false,
+            "name": "user-created-queue",
+            "no_wait": false
+          },
+          "topic": "user.created"
+        },
+        "user_deleted": {
+          "auto_ack": false,
+          "exchange": "exchange-name",
+          "queue": {
+            "auto_delete": false,
+            "durable": true,
+            "exclusive": false,
+            "name": "user-deleted-queue",
+            "no_wait": false
+          },
+          "topic": "user.deleted"
+        }
+      }
+    },
+    "grpc": {
+      "client": {
+        "enabled": false
+      },
+      "enabled": true,
+      "server": {
+        "enabled": true
+      }
+    }
+  }
+}
