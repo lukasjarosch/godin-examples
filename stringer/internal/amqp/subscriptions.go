@@ -42,7 +42,7 @@ func Subscriptions(conn *rabbitmq.RabbitMQ) SubscriberSet {
 // The RequestID middlware will extract the requestId from the delivery header or generate a new one. The requestId is
 // then mad available through the context.
 func (ss SubscriberSet) UserCreated(logger log.Logger, usecase service.Stringer) error {
-	handler := subscriber.UserCreatedSubscriber(logger, usecase)
+	handler := subscriber.UserCreatedSubscriber(logger, usecase, UserCreatedDecoder)
 	handler = middleware.Logging(logger, "user.created", handler)
 	handler = middleware.PrometheusInstrumentation("user.created", handler)
 	handler = middleware.RequestID(handler)

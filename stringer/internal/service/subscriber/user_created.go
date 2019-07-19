@@ -2,9 +2,10 @@ package subscriber
 
 import (
 	"context"
-	grpc_metadata "github.com/go-godin/grpc-metadata"
+	grpcMetadata "github.com/go-godin/grpc-metadata"
 	"github.com/go-godin/log"
 	"github.com/go-godin/rabbitmq"
+	"github.com/pkg/errors"
 
 	userCreatedProto "github.com/lukasjarosch/godin-examples/greeter/api"
 	"github.com/lukasjarosch/godin-examples/stringer/internal/service"
@@ -13,28 +14,38 @@ import (
 // UserCreated is responsible of handling all incoming AMQP messages with routing key 'user.created'
 func UserCreatedSubscriber(logger log.Logger, usecase service.Stringer, decoder rabbitmq.SubscriberDecoder) rabbitmq.SubscriptionHandler {
 	return func(ctx context.Context, delivery *rabbitmq.Delivery) {
-		// the requestId is injected into the context and should be attached on every log
-		logger = logger.With(string(grpc_metadata.RequestID), ctx.Value(string(grpc_metadata.RequestID)))
+		logger = logger.With(string(grpcMetadata.RequestID), ctx.Value(string(grpcMetadata.RequestID)))
 
-		event, err := decoder(delivery)
-		event = event.(userCreatedProto.UserCreatedEvent)
+		event, err := decodeUserCreated(delivery, decoder, logger)
 		if err != nil {
-			logger.Error("failed to decode 'user.created' event", "err", err)
-			delivery.NackDelivery(false, false, "user.created")
-			delivery.IncrementTransportErrorCounter("user.created")
 			return
 		}
 
-		// TODO: Handle user.created subscription
+		_ = event // remove this line, it just keeps the compiler calm until you start using the event :)
+
+		// TODO: Handle user.created subscription here
 		/*
 			If you want to NACK the delivery, use `delivery.NackDelivery()` instead of Nack().
 			This will ensure that the prometheus amqp_nack_counter is increased.
-
-			Godins delivery wrapper also provides a `delivery.IncrementTransportErrorCounter()` method to grant
-			you access to the amqp_transport_error metric. Call it if the message is incomplete or cannot
-			be unmarshalled for any reason.
 		*/
 
 		_ = delivery.Ack(false)
 	}
+}
+
+// decodeUserCreated cleans up the actual handler by providing a cleaner interface for decoding incoming UserCreatedEvent deliveries.
+// It will also take care of logging errors and handling metrics.
+func decodeUserCreated(delivery *rabbitmq.Delivery, decoder rabbitmq.SubscriberDecoder, logger log.Logger) (*userCreatedProto.UserCreatedEvent, error) {
+	event, err := decoder(delivery)
+	if err != nil {
+		if err2 := delivery.NackDelivery(false, false, "user.created"); err2 != nil {
+			err = errors.Wrap(err, err2.Error())
+		}
+		delivery.IncrementTransportErrorCounter("user.created")
+		logger.Error("failed to decode UserCreatedEvent", "err", err)
+		return nil, err
+	}
+	logger.Debug("decoded UserCreatedEvent", "event", event)
+
+	return event.(*userCreatedProto.UserCreatedEvent), nil
 }
