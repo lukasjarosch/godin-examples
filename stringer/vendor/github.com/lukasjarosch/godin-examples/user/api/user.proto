@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+service UserService {
+  rpc Create(CreateRequest) returns (CreateResponse) {}
+  rpc Get(GetRequest) returns (GetResponse) {}
+  rpc List(ListRequest) returns (ListResponse) {}
+  rpc Delete(DeleteRequest) returns (EmptyResponse) {}
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+}
+
+message CreateRequest {
+  string name = 1;
+  string email = 2;
+}
+
+message CreateResponse {
+  User user = 1;
+}
+
+message GetRequest {
+    string id = 1;
+}
+
+message GetResponse {
+    User user = 1;
+}
+
+message ListRequest {}
+message ListResponse {
+    repeated User users = 1;
+}
+
+message DeleteRequest {
+    string id = 1;
+}
+message EmptyResponse {}
+
+
+message UserCreated {
+    User user = 1;
+}

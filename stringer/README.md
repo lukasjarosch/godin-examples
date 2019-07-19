@@ -1,8 +1,8 @@
 # [godin] stringer
-> Powered by Godin v0.4.0 (bc318ed)
+> Powered by Godin v0.5.0 (caee155)
 
 * **Godin init:** 2019-07-17 13:36:44 +0200 CEST
-* **Last godin update :** 2019-07-19 12:04:06 +0200 CEST
+* **Last godin update :** 2019-07-19 12:50:53 +0200 CEST
 
 ## gRPC service: GreeterService
 **Hello**
@@ -20,6 +20,7 @@ Each handler has it's own file, named after the subscription topic.
 | **Routing key** | **Exchange** | **Queue** | **Handler** |
 |-----------------|--------------|-----------|-------------|
 | user.created | exchange-name | user-created-queue | UserCreated |
+| user.deleted | exchange-name | user-deleted-queue | UserDeleted |
 
 ## Transport Options
 | **Option**      | **Enabled**                                                                          |

@@ -3,11 +3,11 @@
     "registry": "registry.hub.docker.com"
   },
   "godin": {
-    "version": "v0.4.0"
+    "version": "v0.5.0"
   },
   "project": {
     "created": "Wed, 17 Jul 2019 13:36:44 CEST",
-    "updated": "Fri, 19 Jul 2019 12:05:07 CEST"
+    "updated": "Fri, 19 Jul 2019 13:00:48 CEST"
   },
   "protobuf": {
     "package": "github.com/lukasjarosch/godin-examples/greeter/api",
@@ -55,6 +55,7 @@
           "rabbitmq": {
             "auto_ack": false,
             "exchange": "exchange-name",
+            "prefetch_count": 10,
             "queue": {
               "auto_delete": false,
               "durable": true,
@@ -63,6 +64,26 @@
               "no_wait": false
             },
             "topic": "user.created"
+          }
+        },
+        "user_deleted": {
+          "handler_name": "UserDeleted",
+          "protobuf": {
+            "go_module": "github.com/lukasjarosch/godin-examples/greeter/api",
+            "message_name": "UserCreatedEvent"
+          },
+          "rabbitmq": {
+            "auto_ack": false,
+            "exchange": "exchange-name",
+            "prefetch_count": 10,
+            "queue": {
+              "auto_delete": false,
+              "durable": true,
+              "exclusive": false,
+              "name": "user-deleted-queue",
+              "no_wait": false
+            },
+            "topic": "user.deleted"
           }
         }
       }

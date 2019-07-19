@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service GreeterService {
+  rpc Hello(HelloRequest) returns (HelloResponse) {}
+}
+
+message HelloRequest {}
+message HelloResponse {}
+
+message UserCreatedEvent {
+  string id = 1;
+  string email = 2;
+}
